@@ -1,0 +1,9 @@
+product_id,name,category,price,sku
+PROD001,Enterprise Software License,Software,2999.99,SKU-SW-001
+PROD002,Cloud Storage Plan,Services,499.99,SKU-SV-002
+PROD003,Hardware Server Unit,Hardware,8999.99,SKU-HW-003
+PROD004,Security Suite,Software,1499.99,SKU-SW-004
+PROD005,Consulting Package,Services,5999.99,SKU-SV-005
+PROD006,Network Equipment,Hardware,3499.99,SKU-HW-006
+PROD007,Database License,Software,4999.99,SKU-SW-007
+PROD008,Support Contract,Services,1999.99,SKU-SV-008

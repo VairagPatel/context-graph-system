@@ -1,0 +1,11 @@
+customer_id,name,email,phone,address_id
+CUST001,Acme Corporation,contact@acme.com,555-0101,ADDR001
+CUST002,TechStart Inc,info@techstart.com,555-0102,ADDR002
+CUST003,Global Traders,sales@globaltraders.com,555-0103,ADDR003
+CUST004,Innovate Solutions,hello@innovate.com,555-0104,ADDR004
+CUST005,Prime Logistics,support@primelogistics.com,555-0105,ADDR005
+CUST006,Digital Dynamics,contact@digitaldynamics.com,555-0106,ADDR006
+CUST007,Metro Supplies,orders@metrosupplies.com,555-0107,ADDR007
+CUST008,Coastal Enterprises,info@coastal.com,555-0108,ADDR008
+CUST009,Summit Partners,team@summitpartners.com,555-0109,ADDR009
+CUST010,Vertex Systems,sales@vertexsystems.com,555-0110,ADDR010
