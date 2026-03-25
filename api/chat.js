@@ -1,6 +1,7 @@
-import Groq from "groq-sdk";
-
+// Vercel serverless function
 export default async function handler(req, res) {
+  // Dynamic import for ES modules in Vercel
+  const { default: Groq } = await import("groq-sdk");
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
