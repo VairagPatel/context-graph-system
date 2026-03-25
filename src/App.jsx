@@ -815,14 +815,16 @@ export default function App() {
     setMessages(prev=>[...prev,{role:"user",content:msg}]);
     setThinking(true);
     try {
-      const history=messages
-        .filter((_,i)=>i>0)
-        .slice(-10)
-        .map(m=>({
+      // Build clean conversation history - only include actual conversation, not the greeting
+      const history = messages
+        .slice(1) // Skip the initial greeting message
+        .slice(-10) // Last 10 messages
+        .filter(m => m.role && (m.role === 'user' || m.role === 'assistant'))
+        .map(m => ({
           role: m.role,
-          content: String(m.rawContent || m.content || "")
+          content: String(m.rawContent || m.content || "").trim()
         }))
-        .filter(m => m.content.trim().length > 0);
+        .filter(m => m.content.length > 0 && m.content.length < 10000); // Reasonable length check
       
       const res=await fetch("/api/chat",{
         method:"POST",

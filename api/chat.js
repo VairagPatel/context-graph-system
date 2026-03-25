@@ -62,10 +62,16 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error('Groq API error:', errorData);
+      console.error('Groq API error:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorData,
+        messageCount: messages.length,
+        totalLength: JSON.stringify(messages).length
+      });
       return res.status(response.status).json({ 
         error: 'Groq API error',
-        detail: errorData.error?.message || 'Unknown error'
+        detail: errorData.error?.message || `HTTP ${response.status}: ${response.statusText}`
       });
     }
 
