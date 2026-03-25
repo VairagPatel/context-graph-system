@@ -1,8 +1,28 @@
--e node_modules/
+# Dependencies
+node_modules/
+
+# Environment variables
 .env
 .env.local
-*.log
-.DS_Store
-
-.vercel
 .env*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build output (optional - include dist if you want built files in repo)
+# dist/
+
+# Vercel
+.vercel/
+
+# IDE
+.vscode/
+.idea/
+
+# Data source files (optional - uncomment if you don't want to include source data)
+# sap-o2c-data/
