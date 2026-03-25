@@ -1,7 +1,5 @@
-// Vercel serverless function
+// Vercel serverless function for Groq API proxy
 export default async function handler(req, res) {
-  // Dynamic import for ES modules in Vercel
-  const { default: Groq } = await import("groq-sdk");
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,26 +18,29 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { apiKey, systemPrompt, userMessage, conversationHistory = [] } = req.body;
-
-  console.log("📨 Incoming chat request");
-  console.log("  - API key present:", !!apiKey);
-  console.log("  - User message length:", userMessage?.length || 0);
-  console.log("  - History length:", conversationHistory?.length || 0);
-
-  // Validate API key
-  if (!apiKey || !apiKey.startsWith("gsk_")) {
-    console.error("❌ Invalid API key format");
-    return res.status(401).json({ error: "Invalid or missing Groq API key. Must start with gsk_" });
-  }
-
-  // Validate required fields
-  if (!systemPrompt || !userMessage) {
-    console.error("❌ Missing required fields");
-    return res.status(400).json({ error: "Missing systemPrompt or userMessage" });
-  }
-
   try {
+    // Dynamic import for ES modules
+    const { default: Groq } = await import("groq-sdk");
+    
+    const { apiKey, systemPrompt, userMessage, conversationHistory = [] } = req.body;
+
+    console.log("📨 Incoming chat request");
+    console.log("  - API key present:", !!apiKey);
+    console.log("  - User message length:", userMessage?.length || 0);
+    console.log("  - History length:", conversationHistory?.length || 0);
+
+    // Validate API key
+    if (!apiKey || !apiKey.startsWith("gsk_")) {
+      console.error("❌ Invalid API key format");
+      return res.status(401).json({ error: "Invalid or missing Groq API key. Must start with gsk_" });
+    }
+
+    // Validate required fields
+    if (!systemPrompt || !userMessage) {
+      console.error("❌ Missing required fields");
+      return res.status(400).json({ error: "Missing systemPrompt or userMessage" });
+    }
+
     // Initialize Groq client with user's API key
     const groq = new Groq({ apiKey });
 
@@ -66,10 +67,10 @@ export default async function handler(req, res) {
     console.log("  - Response length:", content.length);
 
     // Return plain JSON content string
-    res.status(200).json({ content });
+    return res.status(200).json({ content });
 
   } catch (err) {
-    console.error("❌ Groq API error:", err.message);
+    console.error("❌ Error:", err.message);
     console.error("  - Error type:", err.constructor.name);
     
     if (err.status === 401) {
@@ -79,7 +80,7 @@ export default async function handler(req, res) {
       });
     }
     
-    res.status(502).json({ 
+    return res.status(502).json({ 
       error: "Failed to reach Groq API", 
       detail: err.message 
     });
