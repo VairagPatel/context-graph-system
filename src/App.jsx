@@ -815,7 +815,14 @@ export default function App() {
     setMessages(prev=>[...prev,{role:"user",content:msg}]);
     setThinking(true);
     try {
-      const history=messages.filter((_,i)=>i>0).slice(-10).map(m=>({role:m.role,content:m.rawContent??m.content}));
+      const history=messages
+        .filter((_,i)=>i>0)
+        .slice(-10)
+        .map(m=>({
+          role: m.role,
+          content: String(m.rawContent || m.content || "")
+        }))
+        .filter(m => m.content.trim().length > 0);
       
       const res=await fetch("/api/chat",{
         method:"POST",

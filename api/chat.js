@@ -27,12 +27,23 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Missing systemPrompt or userMessage" });
     }
 
-    // Build messages array
+    // Build messages array - filter out any invalid messages
     const messages = [
       { role: "system", content: systemPrompt },
-      ...conversationHistory,
+      ...conversationHistory.filter(msg => 
+        msg && 
+        msg.role && 
+        msg.content && 
+        typeof msg.content === 'string' &&
+        (msg.role === 'user' || msg.role === 'assistant')
+      ),
       { role: "user", content: userMessage }
     ];
+
+    console.log('Sending to Groq:', {
+      messageCount: messages.length,
+      model: 'llama3-70b-8192'
+    });
 
     // Call Groq API directly with fetch
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
