@@ -826,7 +826,7 @@ export default function App() {
         }))
         .filter(m => m.content.length > 0 && m.content.length < 10000); // Reasonable length check
       
-      const res=await fetch("/api/test",{
+      const res=await fetch("/api/chat",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
