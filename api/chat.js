@@ -17,6 +17,14 @@ export default async function handler(req, res) {
   try {
     const { apiKey, systemPrompt, userMessage, conversationHistory = [] } = req.body;
 
+    console.log('=== Request Debug ===');
+    console.log('API Key present:', !!apiKey);
+    console.log('API Key starts with gsk_:', apiKey?.startsWith('gsk_'));
+    console.log('System prompt length:', systemPrompt?.length);
+    console.log('User message length:', userMessage?.length);
+    console.log('History length:', conversationHistory?.length);
+    console.log('History:', JSON.stringify(conversationHistory, null, 2));
+
     // Validate API key
     if (!apiKey || !apiKey.startsWith("gsk_")) {
       return res.status(401).json({ error: "Invalid or missing Groq API key" });
@@ -35,15 +43,14 @@ export default async function handler(req, res) {
         msg.role && 
         msg.content && 
         typeof msg.content === 'string' &&
+        msg.content.trim().length > 0 &&
         (msg.role === 'user' || msg.role === 'assistant')
       ),
       { role: "user", content: userMessage }
     ];
 
-    console.log('Sending to Groq:', {
-      messageCount: messages.length,
-      model: 'llama3-70b-8192'
-    });
+    console.log('Final messages array:', JSON.stringify(messages, null, 2));
+    console.log('Total payload size:', JSON.stringify(messages).length, 'bytes');
 
     // Call Groq API directly with fetch
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
