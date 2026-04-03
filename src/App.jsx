@@ -749,9 +749,7 @@ export default function App() {
   const [running,setRunning]     = useState(false);
   const [activePreset,setActivePreset] = useState(0);
 
-  const [apiKey,setApiKey]       = useState(()=>sessionStorage.getItem("dodge_key")||"");
-  const [keyInput,setKeyInput]   = useState("");
-  const [keyError,setKeyError]   = useState("");
+  // Chat state - API key handled by environment variable
   const [messages,setMessages]   = useState([{role:"assistant",content:"Hi! I can help you analyze the **Order to Cash** process. Ask about sales orders, deliveries, billing, or payments."}]);
   const [chatInput,setChatInput] = useState("");
   const [thinking,setThinking]   = useState(false);
@@ -803,14 +801,9 @@ export default function App() {
     },30);
   },[db,highlightFromRows]);
 
-  const saveKey=()=>{
-    if(!keyInput.startsWith("gsk_")){setKeyError("Must start with gsk_");return;}
-    sessionStorage.setItem("dodge_key",keyInput);setApiKey(keyInput);setKeyInput("");setKeyError("");
-  };
-
   const sendChat=async(override)=>{
     const msg=(override??chatInput).trim();
-    if(!msg||thinking||!db) return; // Removed apiKey check - will use env var if not provided
+    if(!msg||thinking||!db) return; // API key handled by environment variable
     setChatInput("");
     setMessages(prev=>[...prev,{role:"user",content:msg}]);
     setThinking(true);
@@ -830,7 +823,6 @@ export default function App() {
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
-          apiKey: apiKey || undefined, // Send undefined if no key, backend will use env var
           systemPrompt: SYSTEM_PROMPT,
           userMessage: msg,
           conversationHistory: history
@@ -858,7 +850,6 @@ export default function App() {
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify({
-              apiKey: apiKey || undefined,
               systemPrompt: SYSTEM_PROMPT + "\n\nIMPORTANT: Return ONLY valid JSON, no markdown.",
               userMessage: msg,
               conversationHistory: history
@@ -1154,18 +1145,6 @@ export default function App() {
           {/* ══ Chat tab ══ */}
           {tab==="chat"&&(
             <div style={{ flex:1,display:"flex",flexDirection:"column",overflow:"hidden" }}>
-              {!apiKey&&(
-                <div style={{ margin:"12px 14px 0",padding:"12px 14px",background:"#f0f9ff",border:"1px solid #bae6fd",borderRadius:10,flexShrink:0 }}>
-                  <div style={{ fontSize:12,fontWeight:600,color:"#0369a1",marginBottom:8 }}>Enter Groq API key (optional)</div>
-                  <div style={{ display:"flex",gap:6 }}>
-                    <input type="password" value={keyInput} onChange={e=>setKeyInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&saveKey()} placeholder="gsk_..."
-                      style={{ flex:1,padding:"7px 10px",border:`1px solid ${keyError?"#fca5a5":"#bae6fd"}`,borderRadius:7,fontSize:12,fontFamily:"monospace",outline:"none",background:"#fff",color:"#0f172a" }}/>
-                    <button onClick={saveKey} style={{ padding:"7px 12px",background:"#0ea5e9",border:"none",borderRadius:7,color:"#fff",fontWeight:600,fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>Save</button>
-                  </div>
-                  {keyError&&<div style={{ fontSize:11,color:"#ef4444",marginTop:4 }}>{keyError}</div>}
-                  <div style={{ fontSize:11,color:"#7dd3fc",marginTop:6 }}>Using demo API key. Get your own free key at <a href="https://console.groq.com" target="_blank" rel="noreferrer" style={{ color:"#0ea5e9" }}>console.groq.com</a></div>
-                </div>
-              )}
               <div style={{ flex:1,overflowY:"auto",padding:"14px 14px 8px",display:"flex",flexDirection:"column",gap:14 }}>
                 {messages.map((msg,i)=>(
                   <div key={i} style={{ display:"flex",gap:10,animation:"fadeIn 0.2s ease",flexDirection:msg.role==="user"?"row-reverse":"row",alignItems:"flex-start" }}>
