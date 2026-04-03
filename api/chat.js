@@ -15,10 +15,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { apiKey, systemPrompt, userMessage, conversationHistory = [] } = req.body;
+    const { apiKey: clientApiKey, systemPrompt, userMessage, conversationHistory = [] } = req.body;
+
+    // Use client-provided key or fall back to environment variable
+    const apiKey = clientApiKey || process.env.GROQ_API_KEY;
 
     console.log('=== Request Debug ===');
-    console.log('API Key present:', !!apiKey);
+    console.log('Client API Key present:', !!clientApiKey);
+    console.log('Environment API Key present:', !!process.env.GROQ_API_KEY);
+    console.log('Using API Key from:', clientApiKey ? 'client' : 'environment');
     console.log('API Key starts with gsk_:', apiKey?.startsWith('gsk_'));
     console.log('System prompt length:', systemPrompt?.length);
     console.log('User message length:', userMessage?.length);
@@ -27,7 +32,7 @@ export default async function handler(req, res) {
 
     // Validate API key
     if (!apiKey || !apiKey.startsWith("gsk_")) {
-      return res.status(401).json({ error: "Invalid or missing Groq API key" });
+      return res.status(401).json({ error: "Invalid or missing Groq API key. Please add GROQ_API_KEY to Vercel environment variables or provide it in the request." });
     }
 
     // Validate required fields
