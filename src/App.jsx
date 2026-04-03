@@ -1189,15 +1189,15 @@ export default function App() {
               </div>
               <div style={{ padding:"10px 14px",borderTop:"1px solid #e2e8f0",background:"#fff",flexShrink:0 }}>
                 <div style={{ display:"flex",alignItems:"center",gap:4,marginBottom:8 }}>
-                  <span style={{ width:7,height:7,borderRadius:"50%",background:apiKey?"#22c55e":"#f59e0b",display:"inline-block" }}/>
-                  <span style={{ fontSize:12,color:"#64748b" }}>{apiKey?"Dodge AI is awaiting instructions":"Add API key above to enable chat"}</span>
+                  <span style={{ width:7,height:7,borderRadius:"50%",background:"#22c55e",display:"inline-block" }}/>
+                  <span style={{ fontSize:12,color:"#64748b" }}>Dodge AI is ready</span>
                 </div>
                 <div style={{ display:"flex",gap:8 }}>
-                  <input value={chatInput} onChange={e=>setChatInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&!e.shiftKey&&sendChat()} placeholder="Analyze anything" disabled={!apiKey}
-                    style={{ flex:1,padding:"9px 12px",border:"1px solid #e2e8f0",borderRadius:8,fontSize:13,outline:"none",fontFamily:"inherit",color:"#0f172a",background:apiKey?"#f8fafc":"#f1f5f9",cursor:apiKey?"text":"not-allowed" }}
+                  <input value={chatInput} onChange={e=>setChatInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&!e.shiftKey&&sendChat()} placeholder="Analyze anything"
+                    style={{ flex:1,padding:"9px 12px",border:"1px solid #e2e8f0",borderRadius:8,fontSize:13,outline:"none",fontFamily:"inherit",color:"#0f172a",background:"#f8fafc",cursor:"text" }}
                     onFocus={e=>e.target.style.borderColor="#3B82F6"} onBlur={e=>e.target.style.borderColor="#e2e8f0"}/>
-                  <button onClick={()=>sendChat()} disabled={thinking||!chatInput.trim()||!apiKey}
-                    style={{ padding:"9px 16px",borderRadius:8,border:"none",background:thinking||!chatInput.trim()||!apiKey?"#f1f5f9":"#111",color:thinking||!chatInput.trim()||!apiKey?"#94a3b8":"#fff",fontWeight:600,fontSize:13,cursor:thinking||!chatInput.trim()||!apiKey?"not-allowed":"pointer",fontFamily:"inherit" }}>
+                  <button onClick={()=>sendChat()} disabled={thinking||!chatInput.trim()}
+                    style={{ padding:"9px 16px",borderRadius:8,border:"none",background:thinking||!chatInput.trim()?"#f1f5f9":"#111",color:thinking||!chatInput.trim()?"#94a3b8":"#fff",fontWeight:600,fontSize:13,cursor:thinking||!chatInput.trim()?"not-allowed":"pointer",fontFamily:"inherit" }}>
                     Send
                   </button>
                 </div>
